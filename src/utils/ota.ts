@@ -37,6 +37,16 @@ export async function checkGitOTAUpdate({
     } catch (e) {
       // ignore config errors; pull/clone may still proceed
     }
+    const getBundleAbsolutePath = () => {
+      try {
+        const RNFS = require('react-native-fs');
+        const base = `${RNFS.DocumentDirectoryPath}${folderName}`;
+        const rel = Platform.OS === 'ios' ? bundlePathIOS : bundlePathAndroid;
+        return `${base}/${rel}`;
+      } catch (_) {
+        return '';
+      }
+    };
     hotUpdate.git.checkForGitUpdate({
       url: repoUrl,
       branch: Platform.OS === 'ios' ? iosBranch : androidBranch,
@@ -59,6 +69,12 @@ export async function checkGitOTAUpdate({
             userName: 'user.email',
             email: authorEmail,
           });
+          const abs = getBundleAbsolutePath();
+          if (abs) {
+            // Point to the freshly cloned bundle and bump version to invalidate caches
+            hotUpdate.setupExactBundlePath(abs);
+            hotUpdate.setCurrentVersion(Date.now());
+          }
         } catch (e) {}
         Alert.alert('Update ready', 'Restart to apply changes', [
           { text: 'Later' },
@@ -74,6 +90,13 @@ export async function checkGitOTAUpdate({
         resolve();
       },
       onPullSuccess() {
+        try {
+          const abs = getBundleAbsolutePath();
+          if (abs) {
+            hotUpdate.setupExactBundlePath(abs);
+            hotUpdate.setCurrentVersion(Date.now());
+          }
+        } catch (e) {}
         Alert.alert('Update pulled', 'Restart to apply changes', [
           { text: 'Later' },
           {
