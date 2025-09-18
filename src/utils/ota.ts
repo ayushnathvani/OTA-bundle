@@ -47,6 +47,25 @@ export async function checkGitOTAUpdate({
         return '';
       }
     };
+    const installVersionedBundle = async () => {
+      const RNFS = require('react-native-fs');
+      const abs = getBundleAbsolutePath();
+      if (!abs) return false;
+      const ts = Date.now();
+      const dest = abs.endsWith('.bundle')
+        ? abs.replace(/\.bundle$/, `.${ts}.bundle`)
+        : `${abs}.${ts}.bundle`;
+      try {
+        await RNFS.copyFile(abs, dest);
+        // Point to the unique file name so Hermes doesn't reuse bytecode cache
+        const ok = await hotUpdate.setupExactBundlePath(dest);
+        if (ok) {
+          await hotUpdate.setCurrentVersion(ts);
+          return true;
+        }
+      } catch (e) {}
+      return false;
+    };
     hotUpdate.git.checkForGitUpdate({
       url: repoUrl,
       branch: Platform.OS === 'ios' ? iosBranch : androidBranch,
@@ -59,7 +78,7 @@ export async function checkGitOTAUpdate({
         Alert.alert('Clone failed', msg);
         resolve();
       },
-      onCloneSuccess() {
+      async onCloneSuccess() {
         try {
           hotUpdate.git.setConfig(folderName, {
             userName: 'user.name',
@@ -69,12 +88,7 @@ export async function checkGitOTAUpdate({
             userName: 'user.email',
             email: authorEmail,
           });
-          const abs = getBundleAbsolutePath();
-          if (abs) {
-            // Point to the freshly cloned bundle and bump version to invalidate caches
-            hotUpdate.setupExactBundlePath(abs);
-            hotUpdate.setCurrentVersion(Date.now());
-          }
+          await installVersionedBundle();
         } catch (e) {}
         Alert.alert('Update ready', 'Restart to apply changes', [
           { text: 'Later' },
@@ -89,13 +103,9 @@ export async function checkGitOTAUpdate({
         Alert.alert('Pull failed', msg);
         resolve();
       },
-      onPullSuccess() {
+      async onPullSuccess() {
         try {
-          const abs = getBundleAbsolutePath();
-          if (abs) {
-            hotUpdate.setupExactBundlePath(abs);
-            hotUpdate.setCurrentVersion(Date.now());
-          }
+          await installVersionedBundle();
         } catch (e) {}
         Alert.alert('Update pulled', 'Restart to apply changes', [
           { text: 'Later' },
