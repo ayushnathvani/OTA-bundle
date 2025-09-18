@@ -53,5 +53,10 @@
     "url": "https://github.com/ayushnathvani/OTA-bundle.git",
     "androidBranch": "android",
     "iosBranch": "iOS"
-  }
+  },
+  "proguardRules": [
+    "-keep class com.reactnativeotaupdate.** { *; }",
+    "-keep class com.facebook.react.** { *; }",
+    "-keep class org.eclipse.jgit.** { *; }"
+  ]
 }
