@@ -8,3 +8,12 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
+
+# Keep OTA update native module and related classes
+-keep class com.otahotupdate.** { *; }
+-keep class com.facebook.react.bridge.** { *; }
+-keep class com.facebook.react.turbomodule.** { *; }
+-keep class com.facebook.react.** { *; }
+
+# isomorphic-git may use reflection; keep its classes if bundled (defensive)
+-keep class org.eclipse.jgit.** { *; }

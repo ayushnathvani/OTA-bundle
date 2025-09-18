@@ -6,6 +6,9 @@ export async function checkGitOTAUpdate({
   androidBranch = 'android',
   bundlePathIOS = 'output/main.jsbundle',
   bundlePathAndroid = 'output/index.android.bundle',
+  folderName = '/git_hot_update',
+  authorName = 'OTA Bot',
+  authorEmail = 'ota@example.com',
   onProgress,
   restartAfterInstall = false,
 }: {
@@ -14,21 +17,49 @@ export async function checkGitOTAUpdate({
   androidBranch?: string;
   bundlePathIOS?: string;
   bundlePathAndroid?: string;
+  folderName?: string;
+  authorName?: string;
+  authorEmail?: string;
   onProgress?: (percent: number) => void;
   restartAfterInstall?: boolean;
 }) {
   const hotUpdate = require('react-native-ota-hot-update').default;
-  return new Promise<void>(resolve => {
+  return new Promise<void>(async resolve => {
+    try {
+      await hotUpdate.git.setConfig(folderName, {
+        userName: 'user.name',
+        email: authorName,
+      });
+      await hotUpdate.git.setConfig(folderName, {
+        userName: 'user.email',
+        email: authorEmail,
+      });
+    } catch (e) {
+      // ignore config errors; pull/clone may still proceed
+    }
     hotUpdate.git.checkForGitUpdate({
       url: repoUrl,
       branch: Platform.OS === 'ios' ? iosBranch : androidBranch,
       bundlePath: Platform.OS === 'ios' ? bundlePathIOS : bundlePathAndroid,
+      folderName,
+      userName: authorName,
+      email: authorEmail,
       restartAfterInstall,
       onCloneFailed(msg: string) {
         Alert.alert('Clone failed', msg);
         resolve();
       },
       onCloneSuccess() {
+        try {
+          hotUpdate.git.setConfig(folderName, {
+            userName: 'user.name',
+            email: authorName,
+          });
+          hotUpdate.git.setConfig(folderName, {
+            userName: 'user.email',
+            email: authorEmail,
+          });
+        } catch (e) {}
         Alert.alert('Update ready', 'Restart to apply changes', [
           { text: 'Later' },
           {
