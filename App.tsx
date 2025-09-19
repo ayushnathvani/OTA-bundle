@@ -43,6 +43,17 @@ function App() {
     <View style={styles.container}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
 
+      {/* OTA Update Test Banner - Very Visible! */}
+      <View style={styles.otaTestBanner}>
+        <Text style={styles.otaTestTitle}>🚀 OTA UPDATE TEST v2.1 🚀</Text>
+        <Text style={styles.otaTestSubtitle}>
+          Updated: {new Date().toLocaleString()}
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          If you see this banner, OTA update worked! ✅
+        </Text>
+      </View>
+
       {/* Environment indicator */}
       <View style={styles.environmentBar}>
         <Text style={styles.environmentText}>
@@ -91,6 +102,26 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  otaTestBanner: {
+    backgroundColor: '#ff6b35',
+    padding: 16,
+    alignItems: 'center',
+    borderBottomWidth: 3,
+    borderBottomColor: '#ff4500',
+  },
+  otaTestTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  otaTestSubtitle: {
+    fontSize: 14,
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 2,
   },
   environmentBar: {
     backgroundColor: __DEV__ ? '#e8f5e8' : '#f5f5e8',
