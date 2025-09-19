@@ -1,19 +1,20 @@
 import { Alert, LayoutAnimation, Platform } from 'react-native';
+import { Config } from '../config/environment';
 
 export async function checkGitOTAUpdate({
-  repoUrl,
-  iosBranch = 'iOS',
-  androidBranch = 'android',
+  repoUrl = Config.OTA_REPO_URL,
+  iosBranch = Config.OTA_BRANCH === 'development' ? 'iOS-dev' : 'iOS',
+  androidBranch = Config.OTA_BRANCH,
   bundlePathIOS = 'ios/output/main.jsbundle',
   bundlePathAndroid = 'android/output/index.android.bundle',
   folderName = '/git_hot_update',
   authorName = 'ayushnathvani',
   authorEmail = 'ayushn.itpathsolutions@gmail.com',
   onProgress,
-  restartAfterInstall = false,
+  restartAfterInstall = Config.OTA_AUTO_RESTART,
   forceClearCache = true,
 }: {
-  repoUrl: string;
+  repoUrl?: string;
   iosBranch?: string;
   androidBranch?: string;
   bundlePathIOS?: string;
@@ -24,8 +25,15 @@ export async function checkGitOTAUpdate({
   onProgress?: (percent: number) => void;
   restartAfterInstall?: boolean;
   forceClearCache?: boolean;
-}) {
+} = {}) {
   const hotUpdate = require('react-native-ota-hot-update').default;
+
+  // Check if OTA is enabled for current environment
+  if (!Config.OTA_ENABLED) {
+    Alert.alert('OTA Disabled', 'OTA updates are disabled in this environment');
+    return Promise.resolve();
+  }
+
   return new Promise<void>(async resolve => {
     try {
       await hotUpdate.git.setConfig(folderName, {

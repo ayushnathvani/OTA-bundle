@@ -9,7 +9,15 @@
     "start": "react-native start",
     "test": "jest",
     "export-android": "mkdir -p android/output && react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/output/index.android.bundle --assets-dest android/output",
-    "export-ios": "mkdir -p ios/output && react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/output/main.jsbundle --assets-dest ios/output"
+    "export-ios": "mkdir -p ios/output && react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/output/main.jsbundle --assets-dest ios/output",
+    "build:android:dev": "cd android && ./gradlew assembleDebug",
+    "build:android:prod": "cd android && ./gradlew assembleRelease",
+    "bundle:android:dev": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
+    "bundle:android:prod": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
+    "ota:export:dev": "npm run bundle:android:dev && cp android/app/src/main/assets/index.android.bundle android/output/",
+    "ota:export:prod": "npm run bundle:android:prod && cp android/app/src/main/assets/index.android.bundle android/output/",
+    "ota:deploy:dev": "npm run ota:export:dev && git add android/output/index.android.bundle && git commit -m 'Deploy OTA update to development' && git push origin development",
+    "ota:deploy:prod": "npm run ota:export:prod && git add android/output/index.android.bundle && git commit -m 'Deploy OTA update to production' && git push origin production"
   },
   "dependencies": {
     "react": "19.1.0",
