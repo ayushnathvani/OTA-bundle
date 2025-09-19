@@ -10,6 +10,16 @@ class ApiService {
 
   // Generic API call method
   async makeRequest(endpoint: string, options: RequestInit = {}) {
+    // Check if API is enabled
+    if (!Config.API_ENABLED) {
+      console.log('API calls disabled in this environment');
+      return {
+        message: 'API calls disabled',
+        environment: Config.ENVIRONMENT,
+        endpoint,
+      };
+    }
+
     const url = `${this.baseURL}${endpoint}`;
 
     const defaultHeaders = {
@@ -18,6 +28,7 @@ class ApiService {
     };
 
     try {
+      console.log(`Making API request to: ${url}`);
       const response = await fetch(url, {
         ...options,
         headers: {
@@ -27,13 +38,33 @@ class ApiService {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console.warn(
+          `API request failed: ${response.status} - ${response.statusText}`,
+        );
+        // Return a mock response instead of throwing for demo purposes
+        return {
+          error: true,
+          status: response.status,
+          message: `API Error: ${response.statusText}`,
+          environment: Config.ENVIRONMENT,
+          url,
+        };
       }
 
-      return await response.json();
+      const data = await response.json();
+      console.log('API request successful:', data);
+      return data;
     } catch (error) {
       console.error('API Request failed:', error);
-      throw error;
+      // Return a mock response instead of throwing for demo purposes
+      return {
+        error: true,
+        message: `Network Error: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
+        environment: Config.ENVIRONMENT,
+        url,
+      };
     }
   }
 
