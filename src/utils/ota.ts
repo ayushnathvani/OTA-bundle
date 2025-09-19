@@ -6,11 +6,12 @@ export async function checkGitOTAUpdate({
   androidBranch = 'android',
   bundlePathIOS = 'ios/output/main.jsbundle',
   bundlePathAndroid = 'android/output/index.android.bundle',
-  folderName = '/src',
+  folderName = '/git_hot_update',
   authorName = 'ayushnathvani',
   authorEmail = 'ayushn.itpathsolutions@gmail.com',
   onProgress,
   restartAfterInstall = false,
+  forceClearCache = true,
 }: {
   repoUrl: string;
   iosBranch?: string;
@@ -22,6 +23,7 @@ export async function checkGitOTAUpdate({
   authorEmail?: string;
   onProgress?: (percent: number) => void;
   restartAfterInstall?: boolean;
+  forceClearCache?: boolean;
 }) {
   const hotUpdate = require('react-native-ota-hot-update').default;
   return new Promise<void>(async resolve => {
@@ -61,6 +63,28 @@ export async function checkGitOTAUpdate({
         const ok = await hotUpdate.setupExactBundlePath(dest);
         if (ok) {
           await hotUpdate.setCurrentVersion(ts);
+
+          // Force clear React Native caches
+          if (forceClearCache) {
+            try {
+              // Clear Metro cache if available
+              const globalAny = global as any;
+              if (globalAny.__metro_global_prefix__) {
+                globalAny.__metro_global_prefix__ = undefined;
+              }
+              // Force garbage collection to clear cached modules
+              if (globalAny.gc) {
+                globalAny.gc();
+              }
+              // Clear require cache for better module reloading
+              if (globalAny.__r && globalAny.__r.clear) {
+                globalAny.__r.clear();
+              }
+            } catch (e) {
+              // Ignore cache clearing errors
+            }
+          }
+
           return true;
         }
       } catch (e) {}
