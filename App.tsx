@@ -26,10 +26,11 @@ function App() {
   const { checkForUpdates } = useOTAManager();
 
   useEffect(() => {
-    // Example of environment-aware API call
+    // Example of environment-aware API call using a real working endpoint
     const fetchData = async () => {
       try {
-        const data = await ApiService.get('/example');
+        // Use a real API endpoint that works - JSONPlaceholder
+        const data = await ApiService.get('/posts/1');
         setApiData(data);
       } catch (error) {
         console.error('API call failed:', error);
@@ -45,7 +46,7 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>🚀 OTA UPDATE TEST v2.2 🚀</Text>
+        <Text style={styles.otaTestTitle}>🚀 OTA UPDATE TEST v2.3 🚀</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
@@ -68,6 +69,9 @@ function App() {
         <Text style={styles.environmentText}>
           OTA Enabled: {Config.OTA_ENABLED ? 'Yes' : 'No'}
         </Text>
+        <Text style={styles.environmentText}>
+          API Enabled: {Config.API_ENABLED ? 'Yes' : 'No'}
+        </Text>
       </View>
 
       <DemoDynamicFormScreen />
@@ -78,10 +82,11 @@ function App() {
 
         {/* API test button */}
         <Button
-          title="Test API Call"
+          title="Test Real API (JSONPlaceholder)"
           onPress={async () => {
             try {
-              const data = await ApiService.get('/test');
+              // Test with a real working API endpoint
+              const data = await ApiService.get('/posts/2');
               setApiData(data);
             } catch (error) {
               console.error('API test failed:', error);
