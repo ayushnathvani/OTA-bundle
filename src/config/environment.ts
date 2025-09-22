@@ -1,3 +1,5 @@
+import './globals';
+
 interface EnvironmentConfig {
   API_BASE_URL: string;
   OTA_BRANCH: string;
@@ -5,44 +7,88 @@ interface EnvironmentConfig {
   OTA_REPO_URL: string;
   OTA_CHECK_INTERVAL: number;
   OTA_AUTO_RESTART: boolean;
-  ENVIRONMENT: 'development' | 'production';
-  API_ENABLED: boolean; // Add flag to disable API calls for testing
+  ENVIRONMENT: 'development' | 'staging' | 'production';
+  API_ENABLED: boolean;
 }
 
 // Default development configuration
 const developmentConfig: EnvironmentConfig = {
-  API_BASE_URL: 'https://jsonplaceholder.typicode.com', // Real API for testing
+  API_BASE_URL: 'https://jsonplaceholder.typicode.com',
   OTA_BRANCH: 'development',
   OTA_ENABLED: true,
   OTA_REPO_URL: 'https://github.com/ayushnathvani/OTA-bundle.git',
-  OTA_CHECK_INTERVAL: 30000, // 30 seconds for development
+  OTA_CHECK_INTERVAL: 30000, // 30 seconds
   OTA_AUTO_RESTART: false,
   ENVIRONMENT: 'development',
   API_ENABLED: true,
 };
 
-// Production configuration
+// Staging configuration - OTA DISABLED for testing
+const stagingConfig: EnvironmentConfig = {
+  API_BASE_URL: 'https://jsonplaceholder.typicode.com',
+  OTA_BRANCH: 'staging',
+  OTA_ENABLED: false, // 🚫 OTA DISABLED in staging
+  OTA_REPO_URL: 'https://github.com/ayushnathvani/OTA-bundle.git',
+  OTA_CHECK_INTERVAL: 0, // No automatic checks
+  OTA_AUTO_RESTART: false,
+  ENVIRONMENT: 'staging',
+  API_ENABLED: true,
+};
+
+// Production configuration - OTA ENABLED
 const productionConfig: EnvironmentConfig = {
-  API_BASE_URL: 'https://jsonplaceholder.typicode.com', // Real working API for testing
-  OTA_BRANCH: 'development', // Use development branch for now since we're testing
-  OTA_ENABLED: true,
+  API_BASE_URL: 'https://jsonplaceholder.typicode.com',
+  OTA_BRANCH: 'production',
+  OTA_ENABLED: true, // ✅ OTA ENABLED in production
   OTA_REPO_URL: 'https://github.com/ayushnathvani/OTA-bundle.git',
   OTA_CHECK_INTERVAL: 300000, // 5 minutes
   OTA_AUTO_RESTART: true,
   ENVIRONMENT: 'production',
-  API_ENABLED: true, // Enable API calls with working endpoints
+
+  API_ENABLED: true,
 };
 
-// Determine environment based on __DEV__ flag
-const isDevelopment = __DEV__;
+// Determine environment - can be controlled via build flag or manual override
+const getEnvironment = (): EnvironmentConfig => {
+  // Check for staging environment using multiple methods
+  const isStaging =
+    (global as any).__STAGING__ ||
+    process.env.NODE_ENV === 'staging' ||
+    process.env.BUILD_VARIANT === 'staging';
+
+  const isProduction =
+    (global as any).__PRODUCTION__ || (!__DEV__ && !isStaging);
+
+  console.log('Environment Detection:', {
+    NODE_ENV: process.env.NODE_ENV,
+    BUILD_VARIANT: process.env.BUILD_VARIANT,
+    __DEV__: __DEV__,
+    __STAGING__: (global as any).__STAGING__,
+    __PRODUCTION__: (global as any).__PRODUCTION__,
+    isStaging,
+    isProduction,
+  });
+
+  if (isStaging) {
+    console.log('✅ Using STAGING configuration - OTA DISABLED');
+    return stagingConfig;
+  }
+
+  if (isProduction) {
+    console.log('✅ Using PRODUCTION configuration - OTA ENABLED');
+    return productionConfig;
+  }
+
+  console.log('✅ Using DEVELOPMENT configuration - OTA ENABLED');
+  return developmentConfig;
+};
 
 // Export the appropriate config
-export const Config: EnvironmentConfig = isDevelopment
-  ? developmentConfig
-  : productionConfig;
+export const Config: EnvironmentConfig = getEnvironment();
 
 // Helper functions
 export const isProduction = () => Config.ENVIRONMENT === 'production';
+export const isStaging = () => Config.ENVIRONMENT === 'staging';
 export const isDev = () => Config.ENVIRONMENT === 'development';
 
 // API helper

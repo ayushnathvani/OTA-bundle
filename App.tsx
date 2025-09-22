@@ -58,7 +58,7 @@ function App() {
       {/* Environment indicator */}
       <View style={styles.environmentBar}>
         <Text style={styles.environmentText}>
-          Environment: {__DEV__ ? 'Development' : 'Production'}
+          Environment: {Config.ENVIRONMENT.toUpperCase()}
         </Text>
         <Text style={styles.environmentText}>
           API Base: {Config.API_BASE_URL}
@@ -69,9 +69,11 @@ function App() {
         <Text style={styles.environmentText}>
           OTA Enabled: {Config.OTA_ENABLED ? 'Yes' : 'No'}
         </Text>
-        <Text style={styles.environmentText}>
-          API Enabled: {Config.API_ENABLED ? 'Yes' : 'No'}
-        </Text>
+        {Config.ENVIRONMENT === 'staging' && (
+          <Text style={styles.stagingWarning}>
+            ⚠️ STAGING: OTA Updates Disabled for Testing
+          </Text>
+        )}
       </View>
 
       <DemoDynamicFormScreen />
@@ -138,6 +140,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginBottom: 2,
+  },
+  stagingWarning: {
+    fontSize: 12,
+    color: '#ff6b35',
+    fontWeight: 'bold',
+    marginTop: 4,
   },
   otaBar: {
     padding: 12,

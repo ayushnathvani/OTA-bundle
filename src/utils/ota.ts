@@ -7,7 +7,7 @@ export async function checkGitOTAUpdate({
   androidBranch = Config.OTA_BRANCH,
   bundlePathIOS = 'ios/output/main.jsbundle',
   bundlePathAndroid = 'android/output/index.android.bundle',
-  folderName = '/git_hot_update',
+  folderName = '/src',
   authorName = 'ayushnathvani',
   authorEmail = 'ayushn.itpathsolutions@gmail.com',
   onProgress,
