@@ -19,14 +19,14 @@ import DemoDynamicFormScreen from './src/screens/DemoDynamicFormScreen';
 import { useOTAManager } from './src/hooks/useOTAManager';
 import ApiService from './src/services/api';
 import { Config } from './src/config/environment';
-import { useLogs } from './src/utils/logger';
+import { useLogs, log } from './src/utils/logger';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
   const [_progress, _setProgress] = useState(0);
   const [apiData, setApiData] = useState<any>(null);
   const [otaStatus, setOtaStatus] = useState<string>('Initializing...');
-  const { checkForUpdates, getStatus } = useOTAManager();
+  const { checkForUpdates, getStatus, clearOTACache } = useOTAManager();
   const logs = useLogs();
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>🐞 OTA DEBUG TEST v3.3 🐞</Text>
+        <Text style={styles.otaTestTitle}>🐞 OTA DEBUG TEST v3.4 🐞</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
@@ -108,9 +108,9 @@ function App() {
       <View style={styles.logContainer}>
         <Text style={styles.logTitle}>OTA Logs</Text>
         <ScrollView style={styles.logScrollView}>
-          {logs.map((log, index) => (
+          {logs.map((logMessage, index) => (
             <Text key={index} style={styles.logText}>
-              {log}
+              {logMessage}
             </Text>
           ))}
         </ScrollView>
@@ -121,6 +121,15 @@ function App() {
         <Button
           title="Manual OTA Check"
           onPress={() => checkForUpdates(true)} // true = manual check (shows alerts)
+        />
+        <Button
+          title="Clear OTA Cache"
+          onPress={async () => {
+            log('🗑️ Manually clearing OTA cache...');
+            await clearOTACache();
+            log('✅ OTA cache cleared.');
+          }}
+          color="#ff6347" // A nice red color for a destructive action
         />
 
         {/* API test button */}
