@@ -17,8 +17,8 @@ const developmentConfig: EnvironmentConfig = {
   OTA_BRANCH: 'development',
   OTA_ENABLED: true,
   OTA_REPO_URL: 'https://github.com/ayushnathvani/OTA-bundle.git',
-  OTA_CHECK_INTERVAL: 0, // Disabled periodic checks to prevent alert loops
-  OTA_AUTO_RESTART: false, // Disabled auto-restart to prevent alert loops
+  OTA_CHECK_INTERVAL: 30000, // Check every 30 seconds in development
+  OTA_AUTO_RESTART: false, // User chooses when to restart
   ENVIRONMENT: 'development',
   API_ENABLED: true,
 };
@@ -41,8 +41,8 @@ const productionConfig: EnvironmentConfig = {
   OTA_BRANCH: 'production',
   OTA_ENABLED: true, // ✅ OTA ENABLED in production
   OTA_REPO_URL: 'https://github.com/ayushnathvani/OTA-bundle.git',
-  OTA_CHECK_INTERVAL: 0, // Disabled periodic checks to prevent alert loops
-  OTA_AUTO_RESTART: false, // Disabled auto-restart to prevent alert loops
+  OTA_CHECK_INTERVAL: 300000, // Check every 5 minutes in production (300000ms)
+  OTA_AUTO_RESTART: false, // User chooses when to restart
   ENVIRONMENT: 'production',
 
   API_ENABLED: true,

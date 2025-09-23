@@ -1,8 +1,18 @@
 /**
  * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
+ * https://github.com/facebook/react-nativ        <Text style={styles.otaTestTitle}>🚀 OTA FIXED v2.0 🚀</Text>
+        <Text style={styles.otaTestSubtitle}>
+          Updated: {new Date().toLocaleString()}
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          ✅ OTA now works WITHOUT clearing user data!
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          ✅ Smart periodic checking enabled!
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          Uses bundle hash comparison + automatic background checks.
+        </Text>ormat
  */
 
 import {
