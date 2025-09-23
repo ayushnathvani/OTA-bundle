@@ -1,6 +1,18 @@
 /**
  * Sample React Native App
- * https://github.com/facebook/react-nativ        <Text style        <Text style={styles.otaTestTitle}>💥 OTA ULTIMATE FIX v5.0 💥</Text>{styles.otaTestTitle}>🚀 OTA FIXED v2.0 🚀</Text>
+ * https://github.com/facebook/react-nativ        <Text style         <Text style={styles.otaTestTitle}>💀 OTA SUPER AGGRESSIVE v6.0 💀</Text>
+        <Text style={styles.otaTestSubtitle}>
+          Updated: {new Date().toLocaleString()}
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          ✅ SUPER AGGRESSIVE cache destruction system!
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          ✅ Complete React Native cache annihilation!
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          💀 Nuclear approach to OTA cache problems!
+        </Text>style={styles.otaTestTitle}>💥 OTA ULTIMATE FIX v5.0 💥</Text>{styles.otaTestTitle}>🚀 OTA FIXED v2.0 🚀</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
@@ -27,7 +39,7 @@ import {
 import { useState, useEffect } from 'react';
 import DemoDynamicFormScreen from './src/screens/DemoDynamicFormScreen';
 import { useOTAManager } from './src/hooks/useOTAManager';
-import { ultimateApplyUpdate } from './src/utils/ota-ultimate';
+import { superAggressiveApplyUpdate } from './src/utils/ota-super-aggressive';
 import ApiService from './src/services/api';
 import { Config } from './src/config/environment';
 import { useLogs, log } from './src/utils/logger';
@@ -90,7 +102,7 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.10 �</Text>
+        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.11 �</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
@@ -148,9 +160,9 @@ function App() {
           onPress={() => checkForUpdates()} // Manual check
         />
         <Button
-          title="Ultimate Update"
-          onPress={() => ultimateApplyUpdate()}
-          color="#228b22"
+          title="💀 SUPER AGGRESSIVE 💀"
+          onPress={() => superAggressiveApplyUpdate()}
+          color="#8B0000"
         />
         <Button
           title="Clear OTA Cache"
