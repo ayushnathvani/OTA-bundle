@@ -27,7 +27,7 @@ import {
 import { useState, useEffect } from 'react';
 import DemoDynamicFormScreen from './src/screens/DemoDynamicFormScreen';
 import { useOTAManager } from './src/hooks/useOTAManager';
-import { applyInstalledUpdate } from './src/utils/ota';
+import { applyInstalledUpdate } from './src/utils/ota-improved';
 import ApiService from './src/services/api';
 import { Config } from './src/config/environment';
 import { useLogs, log } from './src/utils/logger';
@@ -82,15 +82,18 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>� OTA IMPROVED v1.8 �</Text>
+        <Text style={styles.otaTestTitle}>🚀 OTA SUPER FIXED v3.1 🚀</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          ✅ OTA now works WITHOUT clearing user data!
+          ✅ OTA now works PERFECTLY without clearing user data!
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          Uses smart bundle hash comparison instead of cache clearing.
+          ✅ Comprehensive cache clearing + smart hash comparison!
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          🔧 Improved React Native cache invalidation system.
         </Text>
       </View>
 
