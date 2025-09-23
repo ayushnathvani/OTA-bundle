@@ -1,18 +1,6 @@
 /**
  * Sample React Native App
- * https://github.com/facebook/react-nativ        <Text style         <Text style={styles.otaTestTitle}>💀 OTA SUPER AGGRESSIVE v6.0 💀</Text>
-        <Text style={styles.otaTestSubtitle}>
-          Updated: {new Date().toLocaleString()}
-        </Text>
-        <Text style={styles.otaTestSubtitle}>
-          ✅ SUPER AGGRESSIVE cache destruction system!
-        </Text>
-        <Text style={styles.otaTestSubtitle}>
-          ✅ Complete React Native cache annihilation!
-        </Text>
-        <Text style={styles.otaTestSubtitle}>
-          💀 Nuclear approach to OTA cache problems!
-        </Text>style={styles.otaTestTitle}>💥 OTA ULTIMATE FIX v5.0 💥</Text>{styles.otaTestTitle}>🚀 OTA FIXED v2.0 🚀</Text>
+ * https://github.com/facebook/react-nativ        <Text style        <Text style={styles.otaTestTitle}>💥 OTA ULTIMATE FIX v5.0 💥</Text>{styles.otaTestTitle}>🚀 OTA FIXED v2.0 🚀</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
@@ -39,7 +27,7 @@ import {
 import { useState, useEffect } from 'react';
 import DemoDynamicFormScreen from './src/screens/DemoDynamicFormScreen';
 import { useOTAManager } from './src/hooks/useOTAManager';
-import { superAggressiveApplyUpdate } from './src/utils/ota-super-aggressive';
+import { finalApplyUpdate } from './src/utils/ota-final-solution';
 import ApiService from './src/services/api';
 import { Config } from './src/config/environment';
 import { useLogs, log } from './src/utils/logger';
@@ -49,7 +37,8 @@ function App() {
   const [_progress, _setProgress] = useState(0);
   const [apiData, setApiData] = useState<any>(null);
   const [otaStatus, setOtaStatus] = useState<string>('Initializing...');
-  const { checkForUpdates, getStatus, clearOTACache } = useOTAManager();
+  const { checkForUpdates, getStatus, clearOTACache, applyUpdate } =
+    useOTAManager();
   const logs = useLogs();
 
   // useEffect(() => {
@@ -102,18 +91,19 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.11 �</Text>
+        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.10 �</Text>
+        <Text style={styles.otaTestTitle}>🚀 OTA FINAL SOLUTION v8.0 🚀</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          ✅ OTA now works PERFECTLY without clearing user data!
+          ✅ State reset before every check!
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          ✅ Comprehensive cache clearing + smart hash comparison!
+          ✅ Should fix the "only updates once" problem for good.
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          🔧 Improved React Native cache invalidation system.
+          surgical strike on the OTA version file.
         </Text>
       </View>
 
@@ -160,9 +150,9 @@ function App() {
           onPress={() => checkForUpdates()} // Manual check
         />
         <Button
-          title="💀 SUPER AGGRESSIVE 💀"
-          onPress={() => superAggressiveApplyUpdate()}
-          color="#8B0000"
+          title="Apply Final Update"
+          onPress={() => applyUpdate()}
+          color="#228b22"
         />
         <Button
           title="Clear OTA Cache"
