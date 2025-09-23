@@ -68,15 +68,15 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>🎯 OTA UPDATE TEST v3.1 🎯</Text>
+        <Text style={styles.otaTestTitle}>✅ OTA UPDATE TEST v3.2 ✅</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          🔥 NEW VERSION DEPLOYED VIA OTA! 🔥
+          INCREMENTAL UPDATE FROM v3.0 to v3.2!
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          If you see this, OTA update worked perfectly! ✅
+          This confirms sequential updates work! 🚀
         </Text>
       </View>
 
