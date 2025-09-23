@@ -41,7 +41,7 @@ function App() {
   const logs = useLogs();
 
   useEffect(() => {
-    // Update OTA status periodically
+    checkForUpdates();
     const updateStatus = () => {
       const status = getStatus();
       const lastCheckStr = status.lastCheck
@@ -74,7 +74,8 @@ function App() {
     fetchData();
 
     return () => clearInterval(statusInterval);
-  }, [getStatus]);
+    // Update OTA status periodically
+  }, [getStatus, checkForUpdates]);
 
   return (
     <View style={styles.container}>
@@ -82,7 +83,7 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.2 �</Text>
+        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.3 �</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
@@ -98,7 +99,7 @@ function App() {
       </View>
 
       {/* Environment indicator */}
-      <View style={styles.environmentBar}>
+      {/* <View style={styles.environmentBar}>
         <Text style={styles.environmentText}>
           Environment: {Config.ENVIRONMENT.toUpperCase()}
         </Text>
@@ -117,12 +118,12 @@ function App() {
             ⚠️ STAGING: OTA Updates Disabled for Testing
           </Text>
         )}
-      </View>
+      </View> */}
 
       <DemoDynamicFormScreen />
 
       {/* Log Viewer */}
-      <View style={styles.logContainer}>
+      {/* <View style={styles.logContainer}>
         <Text style={styles.logTitle}>OTA Logs</Text>
         <ScrollView style={styles.logScrollView}>
           {logs.map((logMessage, index) => (
@@ -131,7 +132,7 @@ function App() {
             </Text>
           ))}
         </ScrollView>
-      </View>
+      </View> */}
 
       {/* Manual OTA trigger for testing */}
       <View style={styles.otaBar}>
