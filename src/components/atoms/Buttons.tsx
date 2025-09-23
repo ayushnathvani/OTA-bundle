@@ -49,7 +49,7 @@ const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   btn: {
-    backgroundColor: 'yellow',
+    backgroundColor: 'red',
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',
