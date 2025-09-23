@@ -27,6 +27,7 @@ import {
 import { useState, useEffect } from 'react';
 import DemoDynamicFormScreen from './src/screens/DemoDynamicFormScreen';
 import { useOTAManager } from './src/hooks/useOTAManager';
+import { applyInstalledUpdate } from './src/utils/ota';
 import ApiService from './src/services/api';
 import { Config } from './src/config/environment';
 import { useLogs, log } from './src/utils/logger';
@@ -81,7 +82,7 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>� OTA IMPROVED v1.6 �</Text>
+        <Text style={styles.otaTestTitle}>� OTA IMPROVED v1.7 �</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
@@ -134,6 +135,11 @@ function App() {
         <Button
           title="Manual OTA Check"
           onPress={() => checkForUpdates()} // Manual check
+        />
+        <Button
+          title="Apply Installed Update"
+          onPress={() => applyInstalledUpdate()}
+          color="#228b22"
         />
         <Button
           title="Clear OTA Cache"
