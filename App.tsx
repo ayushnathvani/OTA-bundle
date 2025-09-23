@@ -1,6 +1,6 @@
 /**
  * Sample React Native App
- * https://github.com/facebook/react-nativ        <Text style={styles.otaTestTitle}>🚀 OTA FIXED v2.0 🚀</Text>
+ * https://github.com/facebook/react-nativ        <Text style        <Text style={styles.otaTestTitle}>💥 OTA ULTIMATE FIX v5.0 💥</Text>{styles.otaTestTitle}>🚀 OTA FIXED v2.0 🚀</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
@@ -27,7 +27,7 @@ import {
 import { useState, useEffect } from 'react';
 import DemoDynamicFormScreen from './src/screens/DemoDynamicFormScreen';
 import { useOTAManager } from './src/hooks/useOTAManager';
-import { applyInstalledUpdateCritical } from './src/utils/ota-critical-fix';
+import { ultimateApplyUpdate } from './src/utils/ota-ultimate';
 import ApiService from './src/services/api';
 import { Config } from './src/config/environment';
 import { useLogs, log } from './src/utils/logger';
@@ -39,6 +39,12 @@ function App() {
   const [otaStatus, setOtaStatus] = useState<string>('Initializing...');
   const { checkForUpdates, getStatus, clearOTACache } = useOTAManager();
   const logs = useLogs();
+
+  useEffect(() => {
+    // Call checkForUpdates once when app launches
+    log('🚀 [APP] Calling checkForUpdates on app launch...');
+    checkForUpdates();
+  }, [checkForUpdates]);
 
   useEffect(() => {
     const updateStatus = () => {
@@ -84,7 +90,7 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.7 �</Text>
+        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.8 �</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
@@ -142,8 +148,8 @@ function App() {
           onPress={() => checkForUpdates()} // Manual check
         />
         <Button
-          title="Apply Critical Update"
-          onPress={() => applyInstalledUpdateCritical()}
+          title="Ultimate Update"
+          onPress={() => ultimateApplyUpdate()}
           color="#228b22"
         />
         <Button
