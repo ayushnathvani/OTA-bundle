@@ -7,6 +7,41 @@ let lastProcessedBundleHash: string | null = null;
 let isUpdateInProgress = false;
 
 /**
+ * Get the stored bundle hash from persistent storage
+ */
+const getStoredBundleHash = async (): Promise<string | null> => {
+  try {
+    const RNFS = require('react-native-fs');
+    const hashFile = `${RNFS.DocumentDirectoryPath}/ota_bundle_hash.txt`;
+    const exists = await RNFS.exists(hashFile);
+    if (exists) {
+      const hash = await RNFS.readFile(hashFile, 'utf8');
+      log(`📦 Retrieved stored bundle hash: ${hash}`);
+      return hash.trim();
+    }
+    log('📦 No stored bundle hash found');
+    return null;
+  } catch (e) {
+    log(`❌ Failed to get stored bundle hash: ${e}`);
+    return null;
+  }
+};
+
+/**
+ * Store the bundle hash to persistent storage
+ */
+const storeBundleHash = async (hash: string): Promise<void> => {
+  try {
+    const RNFS = require('react-native-fs');
+    const hashFile = `${RNFS.DocumentDirectoryPath}/ota_bundle_hash.txt`;
+    await RNFS.writeFile(hashFile, hash, 'utf8');
+    log(`💾 Stored bundle hash: ${hash}`);
+  } catch (e) {
+    log(`❌ Failed to store bundle hash: ${e}`);
+  }
+};
+
+/**
  * Deletes the local OTA repository to force a clean clone.
  * This should only be used when manually requested, not on every startup.
  */
@@ -14,14 +49,28 @@ export const clearOTACache = async (folderName: string = '/src') => {
   try {
     const RNFS = require('react-native-fs');
     const repoDir = `${RNFS.DocumentDirectoryPath}${folderName}`;
+    const hashFile = `${RNFS.DocumentDirectoryPath}/ota_bundle_hash.txt`;
+
+    // Clear repository directory
     const dirExists = await RNFS.exists(repoDir);
     if (dirExists) {
       log(`🧹 Manually clearing OTA cache directory: ${repoDir}`);
       await RNFS.unlink(repoDir);
-      log('✅ OTA cache cleared successfully - fresh clone will be performed');
-      // Reset processed bundle hash so next check will show update
-      lastProcessedBundleHash = null;
-    } else {
+      log('✅ OTA repository cache cleared');
+    }
+
+    // Clear stored bundle hash
+    const hashExists = await RNFS.exists(hashFile);
+    if (hashExists) {
+      await RNFS.unlink(hashFile);
+      log('✅ Stored bundle hash cleared');
+    }
+
+    // Reset memory cache
+    lastProcessedBundleHash = null;
+    log('✅ OTA cache cleared completely - fresh clone will be performed');
+
+    if (!dirExists && !hashExists) {
       log('📦 No OTA cache found to clear');
     }
   } catch (e) {
@@ -120,6 +169,16 @@ export async function checkGitOTAUpdate({
 
     await getCurrentVersion(); // Log current version for debugging
 
+    // Load the previously stored bundle hash to compare with new bundles
+    if (!lastProcessedBundleHash) {
+      lastProcessedBundleHash = await getStoredBundleHash();
+      log(
+        `🔄 Loaded stored hash for comparison: ${
+          lastProcessedBundleHash || 'none'
+        }`,
+      );
+    }
+
     // Don't skip updates based on processed version - let bundle hash comparison handle it
     // This allows updates to work properly without clearing user data
     log('🔄 Checking for updates with smart bundle comparison');
@@ -195,7 +254,8 @@ export async function checkGitOTAUpdate({
           const bundleHash = await getBundleHash(abs);
           if (bundleHash) {
             await hotUpdate.setCurrentVersion(bundleHash);
-            lastProcessedBundleHash = bundleHash; // Update processed hash
+            lastProcessedBundleHash = bundleHash; // Update memory cache
+            await storeBundleHash(bundleHash); // Persist to storage
             log(`✅ New bundle installed with hash: ${bundleHash}`);
 
             // Force clear React Native caches only when installing new bundle
