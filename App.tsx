@@ -23,9 +23,29 @@ function App() {
   const isDarkMode = useColorScheme() === 'dark';
   const [_progress, _setProgress] = useState(0);
   const [apiData, setApiData] = useState<any>(null);
-  const { checkForUpdates } = useOTAManager();
+  const [otaStatus, setOtaStatus] = useState<string>('Initializing...');
+  const { checkForUpdates, getStatus } = useOTAManager();
 
   useEffect(() => {
+    // Update OTA status periodically
+    const updateStatus = () => {
+      const status = getStatus();
+      const lastCheckStr = status.lastCheck
+        ? `Last check: ${status.lastCheck.toLocaleTimeString()}`
+        : 'No checks yet';
+
+      if (!status.isEnabled) {
+        setOtaStatus('OTA Disabled');
+      } else {
+        const intervalStr = `Every ${status.checkInterval / 1000}s`;
+        setOtaStatus(`Auto-checking ${intervalStr} | ${lastCheckStr}`);
+      }
+    };
+
+    // Update status immediately and then every 5 seconds
+    updateStatus();
+    const statusInterval = setInterval(updateStatus, 5000);
+
     // Example of environment-aware API call using a real working endpoint
     const fetchData = async () => {
       try {
@@ -38,7 +58,9 @@ function App() {
     };
 
     fetchData();
-  }, []);
+
+    return () => clearInterval(statusInterval);
+  }, [getStatus]);
 
   return (
     <View style={styles.container}>
@@ -46,12 +68,15 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>🚀 OTA UPDATE TEST v2.3 🚀</Text>
+        <Text style={styles.otaTestTitle}>🎯 OTA UPDATE TEST v3.0 🎯</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          If you see this banner, OTA update worked! ✅
+          🔥 NEW VERSION DEPLOYED VIA OTA! 🔥
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          If you see this, OTA update worked perfectly! ✅
         </Text>
       </View>
 
@@ -69,6 +94,7 @@ function App() {
         <Text style={styles.environmentText}>
           OTA Enabled: {Config.OTA_ENABLED ? 'Yes' : 'No'}
         </Text>
+        <Text style={styles.environmentText}>Status: {otaStatus}</Text>
         {Config.ENVIRONMENT === 'staging' && (
           <Text style={styles.stagingWarning}>
             ⚠️ STAGING: OTA Updates Disabled for Testing
@@ -80,7 +106,10 @@ function App() {
 
       {/* Manual OTA trigger for testing */}
       <View style={styles.otaBar}>
-        <Button title="Manual OTA Check" onPress={() => checkForUpdates()} />
+        <Button
+          title="Manual OTA Check"
+          onPress={() => checkForUpdates(true)} // true = manual check (shows alerts)
+        />
 
         {/* API test button */}
         <Button
