@@ -40,11 +40,11 @@ function App() {
   const { checkForUpdates, getStatus, clearOTACache } = useOTAManager();
   const logs = useLogs();
 
-  useEffect(() => {
-    // Call checkForUpdates once when app launches
-    log('🚀 [APP] Calling checkForUpdates on app launch...');
-    checkForUpdates();
-  }, [checkForUpdates]);
+  // useEffect(() => {
+  //   // Call checkForUpdates once when app launches
+  //   log('🚀 [APP] Calling checkForUpdates on app launch...');
+  //   checkForUpdates();
+  // }, [checkForUpdates]);
 
   useEffect(() => {
     const updateStatus = () => {
@@ -90,7 +90,7 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.8 �</Text>
+        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.9 �</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
