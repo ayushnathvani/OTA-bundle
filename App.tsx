@@ -71,12 +71,15 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>🐞 OTA DEBUG TEST v3.4 🐞</Text>
+        <Text style={styles.otaTestTitle}>� OTA IMPROVED v1.1 �</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          This version has an in-app log viewer.
+          ✅ OTA now works WITHOUT clearing user data!
+        </Text>
+        <Text style={styles.otaTestSubtitle}>
+          Uses smart bundle hash comparison instead of cache clearing.
         </Text>
       </View>
 
@@ -120,7 +123,7 @@ function App() {
       <View style={styles.otaBar}>
         <Button
           title="Manual OTA Check"
-          onPress={() => checkForUpdates(true)} // true = manual check (shows alerts)
+          onPress={() => checkForUpdates()} // Manual check
         />
         <Button
           title="Clear OTA Cache"
