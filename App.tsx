@@ -12,12 +12,14 @@ import {
   View,
   Button,
   Text,
+  ScrollView,
 } from 'react-native';
 import { useState, useEffect } from 'react';
 import DemoDynamicFormScreen from './src/screens/DemoDynamicFormScreen';
 import { useOTAManager } from './src/hooks/useOTAManager';
 import ApiService from './src/services/api';
 import { Config } from './src/config/environment';
+import { useLogs } from './src/utils/logger';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -25,6 +27,7 @@ function App() {
   const [apiData, setApiData] = useState<any>(null);
   const [otaStatus, setOtaStatus] = useState<string>('Initializing...');
   const { checkForUpdates, getStatus } = useOTAManager();
+  const logs = useLogs();
 
   useEffect(() => {
     // Update OTA status periodically
@@ -68,15 +71,12 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>✅ OTA UPDATE TEST v3.2 ✅</Text>
+        <Text style={styles.otaTestTitle}>🐞 OTA DEBUG TEST v3.3 🐞</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
         <Text style={styles.otaTestSubtitle}>
-          INCREMENTAL UPDATE FROM v3.0 to v3.2!
-        </Text>
-        <Text style={styles.otaTestSubtitle}>
-          This confirms sequential updates work! 🚀
+          This version has an in-app log viewer.
         </Text>
       </View>
 
@@ -103,6 +103,18 @@ function App() {
       </View>
 
       <DemoDynamicFormScreen />
+
+      {/* Log Viewer */}
+      <View style={styles.logContainer}>
+        <Text style={styles.logTitle}>OTA Logs</Text>
+        <ScrollView style={styles.logScrollView}>
+          {logs.map((log, index) => (
+            <Text key={index} style={styles.logText}>
+              {log}
+            </Text>
+          ))}
+        </ScrollView>
+      </View>
 
       {/* Manual OTA trigger for testing */}
       <View style={styles.otaBar}>
@@ -158,6 +170,26 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     marginBottom: 2,
+  },
+  logContainer: {
+    flex: 1,
+    padding: 12,
+    backgroundColor: '#f0f0f0',
+  },
+  logTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  logScrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    padding: 8,
+  },
+  logText: {
+    fontSize: 10,
+    fontFamily: 'monospace',
   },
   environmentBar: {
     backgroundColor: __DEV__ ? '#e8f5e8' : '#f5f5e8',
