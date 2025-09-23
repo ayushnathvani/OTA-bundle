@@ -68,7 +68,7 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>🎯 OTA UPDATE TEST v3.0 🎯</Text>
+        <Text style={styles.otaTestTitle}>🎯 OTA UPDATE TEST v3.1 🎯</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
