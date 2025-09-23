@@ -41,7 +41,6 @@ function App() {
   const logs = useLogs();
 
   useEffect(() => {
-    checkForUpdates();
     const updateStatus = () => {
       const status = getStatus();
       const lastCheckStr = status.lastCheck
@@ -60,6 +59,8 @@ function App() {
     updateStatus();
     const statusInterval = setInterval(updateStatus, 5000);
 
+    // Call checkForUpdates function
+
     // Example of environment-aware API call using a real working endpoint
     const fetchData = async () => {
       try {
@@ -75,7 +76,7 @@ function App() {
 
     return () => clearInterval(statusInterval);
     // Update OTA status periodically
-  }, [getStatus, checkForUpdates]);
+  }, [getStatus]);
 
   return (
     <View style={styles.container}>
@@ -83,7 +84,7 @@ function App() {
 
       {/* OTA Update Test Banner - Very Visible! */}
       <View style={styles.otaTestBanner}>
-        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.3 �</Text>
+        <Text style={styles.otaTestTitle}>� OTA CRITICAL FIX v4.5 �</Text>
         <Text style={styles.otaTestSubtitle}>
           Updated: {new Date().toLocaleString()}
         </Text>
