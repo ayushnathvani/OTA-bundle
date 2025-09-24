@@ -1,6 +1,10 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { AppState, AppStateStatus } from 'react-native';
-import { checkGitOTAUpdate, clearOTACache } from '../utils/ota';
+import { Alert, AppState, AppStateStatus } from 'react-native';
+import {
+  finalOTAUpdate,
+  finalClearCache,
+  finalApplyUpdate,
+} from '../utils/ota-final-solution';
 import { Config } from '../config/environment';
 import { log } from '../utils/logger';
 
@@ -16,7 +20,8 @@ export const useOTAManager = () => {
       log('🚫 OTA check skipped - OTA disabled in current environment');
       return;
     }
-
+    // Alert.alert('data', 'call');
+    Alert.alert('data', 'call');
     // For automatic checks, respect the check interval timing
     if (!isManual && lastCheckRef.current) {
       const timeSinceLastCheck = Date.now() - lastCheckRef.current.getTime();
@@ -44,9 +49,11 @@ export const useOTAManager = () => {
     setLastCheckTime(now);
 
     try {
-      await checkGitOTAUpdate({
-        restartAfterInstall: false, // Never auto-restart
-        silentCheck: !isManual, // Silent for automatic checks, show alerts for manual
+      log('� [FINAL] Starting Final Solution OTA check...');
+      await finalOTAUpdate({
+        onProgress: percent => {
+          log(`📈 [OTA] Download progress: ${percent.toFixed(1)}%`);
+        },
       });
       log(
         `✅ OTA check completed successfully at ${new Date().toLocaleTimeString()}`,
@@ -157,7 +164,8 @@ export const useOTAManager = () => {
   return {
     isUpdateInProgress: _isChecking,
     checkForUpdates: () => checkForUpdates(true), // Manual check is always with UI
-    clearOTACache,
+    clearOTACache: finalClearCache,
+    applyUpdate: finalApplyUpdate,
     getStatus: () => ({
       isEnabled: Config.OTA_ENABLED,
       checkInterval: Config.OTA_CHECK_INTERVAL,

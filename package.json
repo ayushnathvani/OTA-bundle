@@ -34,15 +34,16 @@
     "promote:staging-to-prod": "git checkout production && git merge staging && npm run ota:deploy:prod"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native/new-app-screen": "0.80.2",
+    "formik": "2.4.6",
+    "isomorphic-git": "^1.25.10",
     "react": "19.1.0",
     "react-native": "0.80.2",
-    "@react-native/new-app-screen": "0.80.2",
-    "formik": "^2.4.6",
-    "yup": "^1.4.0",
+    "react-native-blob-util": "0.19.11",
+    "react-native-fs": "2.20.0",
     "react-native-ota-hot-update": "^2.3.4",
-    "react-native-blob-util": "^0.19.11",
-    "react-native-fs": "^2.20.0",
-    "isomorphic-git": "^1.25.10"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
